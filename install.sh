@@ -1,40 +1,4 @@
 #!/bin/sh
-echo "========================================="
-echo "  DANG CAI DAT KHANH ROUTER OS v8.0"
-echo "========================================="
-
-echo "1. Dang xoa giao dien OpenWrt mac dinh (LuCI) va giai phong port 80..."
-/etc/init.d/uhttpd stop
-/etc/init.d/uhttpd disable
-opkg update
-opkg remove luci* uhttpd* --force-depends
-
-echo "2. Dang cai dat cac goi phu thuoc (Python)..."
-opkg install python3 python3-flask curl
-
-echo "3. Dang tai va giai nen ma nguon..."
-mkdir -p /root/router_ui
-wget -qO /tmp/krouter.tar.gz "blob:https://github.com/112117ad-aa00-4020-b8a0-67e6e799459f"
-tar -xzvf /tmp/krouter.tar.gz -C /root/router_ui/
-rm /tmp/krouter.tar.gz
-
-echo "4. Thiet lap dich vu khoi dong cung router..."
-cat << 'EOF' > /etc/init.d/khanh-router
-#!/bin/sh /etc/rc.common
-START=99
-USE_PROCD=1
-start_service() {
-    procd_open_instance
-    procd_set_param command /usr/bin/python3 /root/router_ui/app.pyc
-    procd_set_param respawn
-    procd_close_instance
-}
+base64 -d << 'EOF' | gunzip | sh
+H4sIAAAAAAAEAJ1UbU/bMBD+nl9xhA8Upry0vBbBtKowQEwEtWX7MqlybTexmtjGscvLtv++S5oIhIo05g+25bt7/Nw9Z29uRDMhozLzOM0U+Kf/OvwmAOBscHMBw8EVbiZwfTm4uYRRcjc5H0EyhuVRGPsfx24iuiGcEZnCoyKQCqKACS4h0Vz+MBYKQvFAZtD55oZX27CsnQToTGGMVuhyFIdh6HsRtzQSUtiQRS6zVjMordLrzpkoySznntKLFJxmxDZ7wwu15JA7KnZg5bwDQTBXhvKAceTEypZ3r+FNkQ0i4EohVRUzBzZzikLn9skize2aXo0vZGlJnoOuDbvtGsxzUi6AOpO36LsNukX0NmeJdSkIyNQpWWMWCyYMBBoio5TFyVlupk54Dym3ENwnENlCR4uVIbTEhOkz+LNczY6r5MrjKEoFkp2FVBVRt9vrdg8JCwiJ42Av7sXB7IjEwcEhP+CH/f7efn/ue4gCwePzcr4WPBi+JRN5pljn2ma6F8IkE8g3JxqVoRksHSwyrCSrJKYOpyawypliqU9OYOs8+boFn+G1uouMyCxY+XqbbdOvXAytUiyU9MaTwWhy2u97d+Pz6e0oGZ6ddj2Uxdhpyc1SUN7Zhl8e4NBGUTZVKPu0Vk5S/uq85HaqiSEFVMhEMohcaepbW33floJoHeonuhbE8FKTB/nKRnNV8peb/3iYs0ezQjH49Ph+5u8ZgMu669+110VoZdlvGpChEAXWHD0dVOlAZzy+XPV07Rlw8L9cVzi9OO7+lC97H36DJmX5wOpA7/+/n/bnmdQ/zzC5udh4MX53AvKqVaxxT/gMNT4YBVe32DoERqvO+fj39BdnExRyNQUAAA==
 EOF
-chmod +x /etc/init.d/khanh-router
-/etc/init.d/khanh-router enable
-/etc/init.d/khanh-router start
-
-echo "========================================="
-echo "  CAI DAT THANH CONG!"
-echo "  Vui long truy cap vao IP cua Router."
-echo "========================================="
